@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./analytics-entry.component.less']
 })
 export class AnalyticsEntryComponent implements OnInit {
-
+  public isCollapsed = false;
   constructor() { }
 
   ngOnInit(): void {

@@ -1,2 +1,38 @@
-analytics
-<router-outlet></router-outlet>
+<nz-layout>
+  <nz-sider
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    nzWidth="200px"
+    nzTheme="light"
+  >
+    <ul
+      nz-menu
+      nzTheme="light"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-menu-item nzMatchRouter>
+        <a [routerLink]="['/', 'analytics', 'dashboard']">
+          <i nz-icon nzType="appstore"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li nz-submenu nzTitle="Performance" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item>Item 1</li>
+          <li nz-menu-item>Item 2</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Views" nzIcon="eye">
+        <ul>
+          <li nz-menu-item>By one</li>
+          <li nz-menu-item>By two</li>
+          <li nz-menu-item>By three</li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout class="inner-content">
+    <router-outlet></router-outlet>
+  </nz-layout>
+</nz-layout>
