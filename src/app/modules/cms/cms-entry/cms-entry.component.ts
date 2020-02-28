@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cms-entry.component.less']
 })
 export class CmsEntryComponent implements OnInit {
-
+  public isCollapsed = false;
   constructor() { }
 
   ngOnInit(): void {

@@ -1,0 +1,12 @@
+<div class="hours" (mouseleave)="mouseUp()" [class.disabled]="disabled">
+  <div
+    class="hour"
+    *ngFor="let h of hours"
+    (mousemove)="moveMove(h)"
+    (mousedown)="mouseDown(h)"
+    (mouseup)="mouseUp()"
+    [class.active]="h.active"
+  >
+    {{ h.value }}
+  </div>
+</div>

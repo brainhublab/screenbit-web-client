@@ -1,0 +1,35 @@
+@import (reference) '~src/variables';
+
+
+@hours-range-picker-slot-height: 32px;
+@hours-range-picker-slot-width: 32px;
+
+.hours {
+  display: block;
+  text-align: center;
+  margin: 10px auto;
+  user-select: none;
+  .hour {
+    background: fade(@normal-color, 20%);
+    display: inline-block;
+    margin: 1px;
+    width: @hours-range-picker-slot-width;
+    height: @hours-range-picker-slot-height;
+    line-height: @hours-range-picker-slot-height;
+    cursor: pointer;
+    transition: background .3s ease, opacity .3s ease;
+    &:hover {
+      background: @item-hover-bg;
+    }
+    &.active {
+      background: @primary-2;
+    }
+  }
+  &.disabled {
+    > .hour {
+      background: @disabled-bg;
+      opacity: .4;
+      cursor: default;
+    }
+  }
+}

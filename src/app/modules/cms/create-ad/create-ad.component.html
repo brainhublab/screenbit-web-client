@@ -1,0 +1,76 @@
+<h1 style="text-align: center;"><a [routerLink]="['..']">Sources</a> / Upload new</h1>
+<form
+  nz-form
+  [formGroup]="validateForm"
+  nzLayout="vertical"
+  (ngSubmit)="submitForm()"
+>
+  <nz-form-item>
+    <nz-form-label>
+      Title
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please input ad title!">
+      <input type="text" nz-input formControlName="title" placeholder="Title" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label>
+      Description
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please input ad description!">
+      <input
+        type="text"
+        nz-input
+        formControlName="description"
+        placeholder="Description"
+      />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label>
+      Media file
+    </nz-form-label>
+    <nz-form-control
+      nzErrorTip="Please upload a media file!"
+      class="hide-ant-upload-disabled"
+    >
+      <nz-upload
+        nzType="drag"
+        [nzBeforeUpload]="beforeUpload"
+        [nzCustomRequest]="upload"
+        [nzMultiple]="false"
+        [nzLimit]="1"
+        (nzChange)="handleChange($event)"
+        [nzListType]="'picture'"
+        [nzDisabled]="validateForm.controls.media_file.value != null"
+      >
+        <p
+          class="ant-upload-drag-icon"
+          *ngIf="validateForm.controls.media_file.value == null"
+        >
+          <i nz-icon nzType="inbox"></i>
+        </p>
+        <p
+          *ngIf="validateForm.controls.media_file.value == null"
+          class="ant-upload-text"
+        >
+          Click or drag file to this area to upload
+        </p>
+      </nz-upload>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label>
+      Hours
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please input range">
+      <app-time-range-picker formControlName="hours"></app-time-range-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <button [nzLoading]="loading" nz-button nzType="primary">Submit</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

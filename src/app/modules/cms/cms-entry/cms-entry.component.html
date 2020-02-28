@@ -1,2 +1,25 @@
-cms
-<router-outlet></router-outlet>
+<nz-layout>
+  <nz-sider
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    nzWidth="200px"
+    nzTheme="light"
+  >
+    <ul
+      nz-menu
+      nzTheme="light"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-menu-item nzMatchRouter>
+        <a [routerLink]="['/', 'cms', 'sources']">
+          <i nz-icon nzType="video-camera"></i>
+          <span>Sources</span>
+        </a>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout class="inner-content">
+    <router-outlet></router-outlet>
+  </nz-layout>
+</nz-layout>

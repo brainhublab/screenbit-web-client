@@ -5,6 +5,7 @@ import { AnalyticsRoutingModule } from './analytics-routing.module';
 import { AnalyticsEntryComponent } from './analytics-entry/analytics-entry.component';
 import { NzLayoutModule, NzMenuModule, NzIconModule, NzCardModule, NzGridModule } from 'ng-zorro-antd';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ChartsModule } from '../common/charts/charts.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     NzMenuModule,
     NzIconModule,
     NzCardModule,
-    NzGridModule
+    NzGridModule,
+    ChartsModule
   ]
 })
 export class AnalyticsModule { }

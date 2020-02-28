@@ -1,0 +1,24 @@
+<div *ngIf="loading">
+  Loading...
+</div>
+
+<div *ngIf="!loading && !ad">
+  Not found
+</div>
+
+<div *ngIf="!loading && ad">
+  <!-- {{ ad | json }} -->
+  <nz-card [nzTitle]="ad.title">
+    <nz-descriptions nzTitle="Source info">
+      <nz-descriptions-item nzTitle="Description">{{ad.description}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Media type">{{ad.media_type}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Created at">{{ad.created_at}}</nz-descriptions-item>
+    </nz-descriptions>
+    <div class="files">
+      <div class="file" *ngFor="let file of ad.file">
+        <nz-avatar *ngIf="ad.media_type == 'IM'" [nzShape]="'square'" [nzSize]="256" [nzSrc]="file.file" [nzIcon]="'user'"></nz-avatar>
+        <video *ngIf="ad.media_type == 'VD'" [src]="file.file" controls></video>
+      </div>
+    </div>
+  </nz-card>
+</div>

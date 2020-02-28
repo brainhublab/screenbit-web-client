@@ -1,0 +1,51 @@
+<h1 style="text-align: center;">Sources</h1>
+<div style="display: block; margin-bottom: 1em;">
+  <a [routerLink]="['create']">
+    <button nz-button>Upload new</button>
+  </a>
+</div>
+<nz-list
+  [nzDataSource]="data"
+  [nzRenderItem]="item"
+  [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 6, lg: 6, xl: 6 }"
+  [nzLoading]="loading"
+>
+  <ng-template #item let-item>
+    <nz-list-item
+      [nzContent]="item.createplaceholder ? createAdTemplate : nzContent"
+    >
+      <ng-template #nzContent>
+        <a [routerLink]="[item.id]">
+          <nz-card style="width:100%;" [nzCover]="coverTemplate">
+            <nz-card-meta
+              [nzTitle]="item.title"
+              [nzDescription]="item.description"
+              [nzAvatar]="avatarTemplate"
+            ></nz-card-meta>
+          </nz-card>
+        </a>
+        <ng-template #avatarTemplate>
+          <i nz-icon [nzType]="item.media_type == 'VD' ? 'video-camera' : 'picture'"></i>
+        </ng-template>
+        <ng-template #coverTemplate>
+          <img *ngIf="item.media_type == 'IM'" [src]="item.file[0].file" />
+          <video *ngIf="item.media_type == 'VD'" [src]="item.file[0].file"></video>
+        </ng-template>
+      </ng-template>
+
+      <ng-template #createAdTemplate>
+        <a [routerLink]="['create']">
+          <nz-card style="width:100%;" [nzCover]="coverTemplate">
+            <nz-card-meta [nzTitle]="item.title"></nz-card-meta>
+            <ng-template #coverTemplate>
+              <img
+                alt="example"
+                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+              />
+            </ng-template>
+          </nz-card>
+        </a>
+      </ng-template>
+    </nz-list-item>
+  </ng-template>
+</nz-list>

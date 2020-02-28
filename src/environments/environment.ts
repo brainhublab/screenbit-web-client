@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  api_url: 'http://localhost:9123/screenbit_api',
+  api_client_token: 'XYJkmMr5gqPuXfPIDv74r7Bai77MfZ'
 };
 
 /*
