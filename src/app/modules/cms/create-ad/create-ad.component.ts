@@ -77,6 +77,7 @@ export class CreateAdComponent implements OnInit {
         err => {
           // fail
           this.msg.error('Error creating ad');
+          this.loading = false;
         });
   }
 
