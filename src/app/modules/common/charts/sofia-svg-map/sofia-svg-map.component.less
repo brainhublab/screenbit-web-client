@@ -1,8 +1,68 @@
+@import (reference) "~src/variables";
+
+@keyframes anim {
+  0% {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+    z-index: initial;
+    background: none;
+    border-radius: none;
+    box-shadow: none;
+  }
+  100% {
+    position: fixed;
+    top: 5vh;
+    left: 5vw;
+    width: 90vw;
+    height: 90vh;
+    z-index: 999;
+    background: @component-background;
+    border-radius: @border-radius-base;
+    box-shadow: @card-shadow;
+  }
+}
+
 :host {
-  path {
-    fill-opacity: 1;
-    &:hover {
-      fill-opacity: .5;
+  .wrapper {
+    display: block;
+    position: relative;
+    // transition: all 0.3s ease;
+    overflow: hidden;
+    &.fullscreen {
+      animation: anim .5s ease both;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      &.form-item {
+        path {
+          cursor: pointer;
+          &.selected {
+            fill: #ff7979 !important;
+          }
+        }
+      }
+    }
+    .zoom-icon {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+      font-size: 24px;
+      opacity: 0.5;
+      &:hover {
+        opacity: 1;
+      }
+    }
+    path {
+      fill-opacity: 1;
+      &:hover {
+        fill-opacity: 0.5;
+      }
     }
   }
 }

@@ -7,6 +7,7 @@ import { DetailedPieChartComponent } from './detailed-pie-chart/detailed-pie-cha
 import { CalendarChartComponent } from './calendar-chart/calendar-chart.component';
 import { TreeMapChartComponent } from './tree-map-chart/tree-map-chart.component';
 import { SofiaSvgMapComponent } from './sofia-svg-map/sofia-svg-map.component';
+import { SofiaSvgMapModule } from './sofia-svg-map/sofia-svg-map.module';
 
 const moduleSharedComponents = [
   LineChartComponent,
@@ -14,7 +15,6 @@ const moduleSharedComponents = [
   DetailedPieChartComponent,
   CalendarChartComponent,
   TreeMapChartComponent,
-  SofiaSvgMapComponent,
 ];
 
 @NgModule({
@@ -24,9 +24,11 @@ const moduleSharedComponents = [
   imports: [
     CommonModule,
     NgxChartsModule,
+    SofiaSvgMapModule
   ],
   exports: [
-    ...moduleSharedComponents
+    ...moduleSharedComponents,
+    SofiaSvgMapModule
   ]
 })
 export class ChartsModule { }

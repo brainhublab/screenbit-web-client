@@ -90,7 +90,7 @@
       Areas
     </nz-form-label>
     <nz-form-control nzErrorTip="Please select areas">
-      <nz-select
+      <!-- <nz-select
         [nzLoading]="!(areasOptions?.length > 0)"
         nzMode="multiple"
         nzPlaceHolder="Select areas"
@@ -101,7 +101,8 @@
           [nzLabel]="option[1]"
           [nzValue]="option[0]"
         ></nz-option>
-      </nz-select>
+      </nz-select> -->
+      <app-sofia-svg-map formControlName="areas" [formItem]="true"></app-sofia-svg-map>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item *ngIf="validateForm.controls.areas.valid">
