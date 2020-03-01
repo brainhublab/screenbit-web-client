@@ -16,16 +16,37 @@
 }
 
 .ant-card-cover {
-  img {
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  img, video {
     height: 200px;
     max-width: 100%;
-  }
-  video {
-    height: 200px;
-    max-width: 100%;
+    margin: auto;
+    display: block;
   }
 }
 
 .ant-layout-header {
   padding: 0 24px;
+}
+
+.full-width-chart {
+  display: flex;
+  max-width: 100%;
+  overflow: hidden;
+  min-height: 400px;
+  &.small {
+    min-height: 100px;
+    max-height: 200px;
+  }
+}
+
+.ant-descriptions-item > .ant-descriptions-item-label {
+  font-weight: bold;
+  color: @text-color-secondary;
+  text-transform: uppercase;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+
 }

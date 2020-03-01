@@ -1,4 +1,9 @@
-<h1 style="text-align: center;"><a [routerLink]="['..']">Sources</a> / Upload new</h1>
+<nz-page-header
+  (nzBack)="goBack()"
+  nzBackIcon
+  nzTitle="Upload new"
+>
+</nz-page-header>
 <form
   nz-form
   [formGroup]="validateForm"
@@ -66,6 +71,25 @@
     </nz-form-label>
     <nz-form-control nzErrorTip="Please input range">
       <app-time-range-picker formControlName="hours"></app-time-range-picker>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label>
+      Areas
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please input range">
+      <nz-select
+        [nzLoading]="!(areasOptions?.length > 0)"
+        nzMode="multiple"
+        nzPlaceHolder="Select areas"
+        formControlName="areas"
+      >
+        <nz-option
+          *ngFor="let option of areasOptions"
+          [nzLabel]="option[1]"
+          [nzValue]="option[0]"
+        ></nz-option>
+      </nz-select>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>

@@ -4,6 +4,8 @@ import { NzMessageService, UploadXHRArgs, UploadFile } from 'ng-zorro-antd';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { AdsService, CreateAdPdto } from 'src/app/services/ads.service';
 import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
+import { Area, Ad } from 'src/app/models/ad';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-ad',
@@ -14,6 +16,7 @@ export class CreateAdComponent implements OnInit {
   validateForm: FormGroup;
   public loading = false;
   percent = 0;
+  areasOptions: Array<Area> = [];
 
   beforeUpload = (file: File) => {
     this.loading = true;
@@ -61,7 +64,7 @@ export class CreateAdComponent implements OnInit {
     this.loading = true;
     this.adsService.post(ad)
       .subscribe(
-        (event: HttpEvent<{}>) => {
+        (event: HttpEvent<{} | Ad>) => {
           if (event.type === HttpEventType.UploadProgress) {
             if (event.total > 0) {
               this.percent = (event.loaded / event.total) * 100;
@@ -69,15 +72,16 @@ export class CreateAdComponent implements OnInit {
           } else if (event instanceof HttpResponse) {
             // uploaded
             this.loading = false;
-            const newAd = event.body;
-            this.msg.success('Created');
-            console.log(newAd);
+            const newAd: Ad = event.body as Ad;
+            this.msg.success(`Created ad ${newAd.title}`);
+            this.router.navigate(['..', newAd.id], {relativeTo: this.route});
           }
         },
         err => {
           // fail
           this.msg.error('Error creating ad');
           this.loading = false;
+          console.log("Error:", err);
         });
   }
 
@@ -86,8 +90,15 @@ export class CreateAdComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly msg: NzMessageService,
-    private readonly adsService: AdsService
+    private readonly adsService: AdsService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) { }
+
+
+  public goBack() {
+    this.router.navigate(['..'], {relativeTo: this.route});
+  }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
@@ -95,6 +106,16 @@ export class CreateAdComponent implements OnInit {
       description: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(500)]],
       media_file: [null, Validators.required],
       hours: [null, Validators.required],
+      areas: [null, [Validators.required, Validators.minLength(1)]],
     });
+    this.reloadAreas();
+  }
+
+  private async reloadAreas() {
+    try {
+      this.areasOptions = await this.adsService.getAreas().toPromise();
+    } catch (e) {
+      console.error("Error loading areas...");
+    }
   }
 }

@@ -1,9 +1,10 @@
-<h1 style="text-align: center;">Sources</h1>
-<div style="display: block; margin-bottom: 1em;">
-  <a [routerLink]="['create']">
-    <button nz-button>Upload new</button>
-  </a>
-</div>
+<nz-page-header nzTitle="Sources">
+  <nz-page-header-extra>
+    <a [routerLink]="['create']">
+      <button nz-button>Upload new</button>
+    </a>
+    </nz-page-header-extra>
+</nz-page-header>
 <nz-list
   [nzDataSource]="data"
   [nzRenderItem]="item"
@@ -15,21 +16,41 @@
       [nzContent]="item.createplaceholder ? createAdTemplate : nzContent"
     >
       <ng-template #nzContent>
-        <a [routerLink]="[item.id]">
-          <nz-card style="width:100%;" [nzCover]="coverTemplate">
-            <nz-card-meta
-              [nzTitle]="item.title"
-              [nzDescription]="item.description"
-              [nzAvatar]="avatarTemplate"
-            ></nz-card-meta>
-          </nz-card>
-        </a>
-        <ng-template #avatarTemplate>
-          <i nz-icon [nzType]="item.media_type == 'VD' ? 'video-camera' : 'picture'"></i>
+        <nz-card style="width:100%;" [nzCover]="coverTemplate">
+          <nz-card-meta
+            [nzTitle]="item.title"
+            [nzDescription]="descriptionTemplate"
+            [nzAvatar]="avatarTemplate"
+          ></nz-card-meta>
+        </nz-card>
+        <ng-template #descriptionTemplate>
+          <nz-tag
+            [nzColor]="item.is_active ? 'green' : null"
+            class="cursor-pointer"
+            nz-tooltip
+            nzTooltipTitle="Click to change"
+            (click)="toggleActiveStatus($event, item)"
+            >{{ item.is_active ? "Active" : "Paused" }}</nz-tag
+          >
+          <nz-tag nzColor="blue">
+            Media type:
+            <i
+              nz-icon
+              [nzType]="item.media_type == 'VD' ? 'video-camera' : 'picture'"
+            ></i>
+          </nz-tag>
+
+          <p>{{ item.description }}</p>
         </ng-template>
+        <ng-template #avatarTemplate> </ng-template>
         <ng-template #coverTemplate>
-          <img *ngIf="item.media_type == 'IM'" [src]="item.file[0].file" />
-          <video *ngIf="item.media_type == 'VD'" [src]="item.file[0].file"></video>
+          <a [routerLink]="[item.id]">
+            <img *ngIf="item.media_type == 'IM'" [src]="item.file[0].file" />
+            <video
+              *ngIf="item.media_type == 'VD'"
+              [src]="item.file[0].file"
+            ></video>
+          </a>
         </ng-template>
       </ng-template>
 

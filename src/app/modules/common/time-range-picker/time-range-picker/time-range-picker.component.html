@@ -1,4 +1,4 @@
-<div class="hours" (mouseleave)="mouseUp()" [class.disabled]="disabled">
+<div class="hours" (mouseleave)="mouseUp()" [class.disabled]="disabled" [class.readonly]="readonly">
   <div
     class="hour"
     *ngFor="let h of hours"

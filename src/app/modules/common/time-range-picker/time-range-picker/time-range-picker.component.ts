@@ -25,18 +25,24 @@ export class TimeRangePickerComponent implements ControlValueAccessor {
   public touching = false;
 
   @Input() public disabled = false;
+  @Input() public readonly = false;
   private onChange: (_: Array<string>) => void;
   private onTouched: () => void;
 
+
+  private get isEditable() {
+    return !this.disabled && !this.readonly;
+  }
+
   mouseDown(hour: Hour) {
-    if (!this.disabled) {
+    if (this.isEditable) {
       this.touching = true;
       this.lastSelected = hour;
     }
   }
 
   mouseUp() {
-    if (!this.disabled) {
+    if (this.isEditable) {
       this.touching = false;
       this.lastSelected = null;
       this.setResultHours();
@@ -44,7 +50,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor {
   }
 
   private setResultHours() {
-    if (!this.disabled) {
+    if (this.isEditable) {
       const result = this.hours.filter(v => v.active).map(v => v.value);
       if (this.onChange) {
         this.onChange(result);
@@ -53,7 +59,7 @@ export class TimeRangePickerComponent implements ControlValueAccessor {
   }
 
   moveMove(hour: Hour) {
-    if (!this.disabled && this.touching) {
+    if (this.isEditable && this.touching) {
       this.hours = this.hours.map(v => {
         if (v.value === hour.value) {
           return { ...v, active: !this.lastSelected.active };
@@ -67,8 +73,9 @@ export class TimeRangePickerComponent implements ControlValueAccessor {
 
   writeValue(newValue?: Array<string>) {
     this.hours = this.hours.map(hour => {
-      return { ...hour, active: newValue && hour.value in newValue };
+      return { ...hour, active: newValue ? newValue.includes(hour.value) : false };
     });
+
   }
 
 

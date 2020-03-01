@@ -1,10 +1,15 @@
-<div>
-  chart
-  <!-- <v-chart [forceFit]="forceFit" [height]="height" [data]="data" [scale]="scale">
-    <v-tooltip></v-tooltip>
-    <v-axis></v-axis>
-    <v-legend></v-legend>
-    <v-smooth-line position="month*temperature" color="city" shape="smooth"></v-smooth-line>
-    <v-point position="month*temperature" color="city" shape="circle"></v-point>
-  </v-chart> -->
-</div>
+<ngx-charts-line-chart
+  [legend]="legend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxis]="xAxis"
+  [yAxis]="yAxis"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [timeline]="timeline"
+  [results]="multi"
+  (select)="onSelect($event)"
+  (activate)="onActivate($event)"
+  (deactivate)="onDeactivate($event)"
+>
+</ngx-charts-line-chart>

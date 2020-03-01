@@ -18,7 +18,13 @@ import {
   NzTimePickerModule,
   NzDatePickerModule,
   NzDescriptionsModule,
-  NzAvatarModule
+  NzAvatarModule,
+  NzTagModule,
+  NzToolTipModule,
+  NzPopconfirmModule,
+  NzDividerModule,
+  NzSelectModule,
+  NzPageHeaderModule
 } from 'ng-zorro-antd';
 import { SourcesComponent } from './sources/sources.component';
 import { CreateAdComponent } from './create-ad/create-ad.component';
@@ -49,7 +55,13 @@ import { SourceDetailsComponent } from './source-details/source-details.componen
     TimeRangePickerModule,
     NzDatePickerModule,
     NzDescriptionsModule,
-    NzAvatarModule
+    NzAvatarModule,
+    NzTagModule,
+    NzToolTipModule,
+    NzPopconfirmModule,
+    NzDividerModule,
+    NzSelectModule,
+    NzPageHeaderModule
   ]
 })
 export class CmsModule { }
