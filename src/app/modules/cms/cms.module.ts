@@ -34,11 +34,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TimeRangePickerModule } from '../common/time-range-picker/time-range-picker.module';
 import { SourceDetailsComponent } from './source-details/source-details.component';
 import { SofiaSvgMapModule } from '../common/charts/sofia-svg-map/sofia-svg-map.module';
-import { AreasSelectorComponent } from './areas-selector/areas-selector.component';
 
 
 @NgModule({
-  declarations: [CmsEntryComponent, SourcesComponent, CreateAdComponent, SourceDetailsComponent, AreasSelectorComponent],
+  declarations: [CmsEntryComponent, SourcesComponent, CreateAdComponent, SourceDetailsComponent],
   imports: [
     CommonModule,
     FormsModule,
