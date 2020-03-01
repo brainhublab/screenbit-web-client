@@ -1,8 +1,4 @@
-<nz-page-header
-  (nzBack)="goBack()"
-  nzBackIcon
-  nzTitle="Upload new"
->
+<nz-page-header (nzBack)="goBack()" nzBackIcon nzTitle="Upload new">
 </nz-page-header>
 <form
   nz-form
@@ -65,6 +61,22 @@
       </nz-upload>
     </nz-form-control>
   </nz-form-item>
+  <nz-form-item *ngIf="selected_media_type === 'IM'">
+    <nz-form-label>
+      Duration
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please set image duration (in seconds)">
+      <nz-input-number
+      formControlName="duration"
+      [nzMin]="1"
+      [nzMax]="24 * 60 * 60"
+      [nzStep]="10"
+      [nzFormatter]="formatterDuration"
+      [nzParser]="parserDuration"
+    ></nz-input-number>
+
+    </nz-form-control>
+  </nz-form-item>
   <nz-form-item>
     <nz-form-label>
       Hours
@@ -77,7 +89,7 @@
     <nz-form-label>
       Areas
     </nz-form-label>
-    <nz-form-control nzErrorTip="Please input range">
+    <nz-form-control nzErrorTip="Please select areas">
       <nz-select
         [nzLoading]="!(areasOptions?.length > 0)"
         nzMode="multiple"
@@ -90,6 +102,20 @@
           [nzValue]="option[0]"
         ></nz-option>
       </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item *ngIf="validateForm.controls.areas.valid">
+    <nz-form-label>
+      Potential views
+    </nz-form-label>
+    <nz-form-control nzErrorTip="Please set max potantial views">
+      <nz-slider
+        [nzMin]="1"
+        [nzMax]="max_potential_views"
+        [nzStep]="10"
+        [nzMarks]="marks"
+        formControlName="potential_views"
+      ></nz-slider>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>

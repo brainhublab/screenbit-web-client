@@ -24,7 +24,9 @@ import {
   NzPopconfirmModule,
   NzDividerModule,
   NzSelectModule,
-  NzPageHeaderModule
+  NzPageHeaderModule,
+  NzSliderModule,
+  NzInputNumberModule
 } from 'ng-zorro-antd';
 import { SourcesComponent } from './sources/sources.component';
 import { CreateAdComponent } from './create-ad/create-ad.component';
@@ -61,7 +63,9 @@ import { SourceDetailsComponent } from './source-details/source-details.componen
     NzPopconfirmModule,
     NzDividerModule,
     NzSelectModule,
-    NzPageHeaderModule
+    NzPageHeaderModule,
+    NzSliderModule,
+    NzInputNumberModule
   ]
 })
 export class CmsModule { }

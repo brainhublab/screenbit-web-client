@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { NzMessageService, UploadXHRArgs, UploadFile } from 'ng-zorro-antd';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { AdsService, CreateAdPdto } from 'src/app/services/ads.service';
@@ -17,6 +17,14 @@ export class CreateAdComponent implements OnInit {
   public loading = false;
   percent = 0;
   areasOptions: Array<Area> = [];
+  public max_potential_views = 10;
+  public selected_media_type: 'IM' | 'VD' = null;
+
+  public marks: any = {
+    0: 0,
+    [this.max_potential_views]: this.max_potential_views
+  };
+
 
   beforeUpload = (file: File) => {
     this.loading = true;
@@ -54,13 +62,15 @@ export class CreateAdComponent implements OnInit {
     if (this.validateForm.invalid && this.validateForm.controls.media_file.errors) {
       this.msg.error("Upload media file please!");
       return;
-    } else {
+    } else if (this.validateForm.valid) {
       this.createAd(this.validateForm.value);
     }
   }
 
   private createAd(ad: CreateAdPdto) {
 
+    console.log(ad);
+    return;
     this.loading = true;
     this.adsService.post(ad)
       .subscribe(
@@ -74,7 +84,7 @@ export class CreateAdComponent implements OnInit {
             this.loading = false;
             const newAd: Ad = event.body as Ad;
             this.msg.success(`Created ad ${newAd.title}`);
-            this.router.navigate(['..', newAd.id], {relativeTo: this.route});
+            this.router.navigate(['..', newAd.id], { relativeTo: this.route });
           }
         },
         err => {
@@ -97,7 +107,11 @@ export class CreateAdComponent implements OnInit {
 
 
   public goBack() {
-    this.router.navigate(['..'], {relativeTo: this.route});
+    this.router.navigate(['..'], { relativeTo: this.route });
+  }
+
+  requiredIfImage = (control: AbstractControl): ValidationErrors | null => {
+    return this.selected_media_type === 'IM' && !control.value ? { required: true } : null;
   }
 
   ngOnInit(): void {
@@ -105,10 +119,38 @@ export class CreateAdComponent implements OnInit {
       title: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       description: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(500)]],
       media_file: [null, Validators.required],
+      duration: [10, [this.requiredIfImage]],
       hours: [null, Validators.required],
       areas: [null, [Validators.required, Validators.minLength(1)]],
+      potential_views: [1, [
+        Validators.required,
+        Validators.min(10),
+        (control: AbstractControl) => Validators.max(this.max_potential_views)(control)
+      ]],
     });
     this.reloadAreas();
+
+    this.validateForm.controls.areas.valueChanges.subscribe((v: Array<string>) => {
+      if (v) {
+        this.max_potential_views = v.length * (Math.floor(Math.random() * (200000 - 1 + 1)) + 1);
+      } else {
+        this.max_potential_views = 10;
+      }
+      this.marks = {
+        1: 1,
+        [this.max_potential_views]: this.max_potential_views
+      };
+    });
+
+    this.validateForm.controls.media_file.valueChanges.subscribe((file: UploadFile) => {
+      if (!file) {
+        this.selected_media_type = null;
+      } else if (file.type.startsWith('video')) {
+        this.selected_media_type = 'VD';
+      } else if (file.type.startsWith('image')) {
+        this.selected_media_type = 'IM';
+      }
+    });
   }
 
   private async reloadAreas() {
@@ -118,4 +160,8 @@ export class CreateAdComponent implements OnInit {
       console.error("Error loading areas...");
     }
   }
+
+
+  formatterDuration = (value: number) => `${value} s`;
+  parserDuration = (value: string) => value.replace(' s', '');
 }
