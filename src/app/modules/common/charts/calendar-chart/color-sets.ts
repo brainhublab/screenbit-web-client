@@ -20,7 +20,23 @@ export let colorSets = [
     selectable: true,
     group: 'Ordinal',
     domain: [
-      '#a8385d', '#7aa3e5', '#a27ea8', '#aae3f5', '#adcded', '#a95963', '#8796c0', '#7ed3ed', '#50abcc', '#ad6886'
+          '#d3e7c1',
+          '#b4d596',
+          '#9fc97c',
+          '#96c271',
+          '#8cbc67',
+          '#A0EA9A',
+          '#B4F08E',
+          '#C8F880',
+          '#DAA520',
+          '#FFA500',
+          '#ff631f',
+          '#FCAB6B',
+          '#F9A7B7',
+          '#FB8C83',
+          '#FA7596',
+
+      // '#a8385d', '#7aa3e5', '#a27ea8', '#aae3f5', '#adcded', '#a95963', '#8796c0', '#7ed3ed', '#50abcc', '#ad6886'
     ]
   },
   {

@@ -1,23 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
-export var single = [
-  {
-    "name": "Germany",
-    "value": 8940000
-  },
-  {
-    "name": "USA",
-    "value": 5000000
-  },
-  {
-    "name": "France",
-    "value": 7200000
-  },
-    {
-    "name": "UK",
-    "value": 6200000
-  }
-];
+export interface DetailedPieDataRow {
+  name: string;
+  value: number;
+}
 
 @Component({
   selector: 'app-detailed-pie-chart',
@@ -25,16 +11,14 @@ export var single = [
   styleUrls: ['./detailed-pie-chart.component.less']
 })
 export class DetailedPieChartComponent implements OnInit {
-  single: any[];
+  @Input() data: DetailedPieDataRow[] = [];
   // options
   gradient: boolean = false;
   showLegend: boolean = true;
   showLabels: boolean = true;
   isDoughnut: boolean = false;
 
-  constructor() {
-    Object.assign(this, { single });
-  }
+  constructor() {  }
 
   onSelect(data): void {
     console.log('Item clicked', JSON.parse(JSON.stringify(data)));

@@ -16,11 +16,17 @@ export class VbarChartComponent implements OnInit {
   showXAxis = true;
   showYAxis = true;
   gradient = false;
-  showLegend = true;
+  showLegend = false;
   showXAxisLabel = true;
   xAxisLabel = 'Hours';
   showYAxisLabel = true;
   yAxisLabel = 'Interaction';
+  barPadding = 24;
+  colorScheme = {
+    domain: [
+      '#707070'
+    ]
+  };
 
   constructor() {
   }

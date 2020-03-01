@@ -1,72 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-export var multi = [
-  {
-    "name": "Germany",
-    "series": [
-      {
-        "name": "1990",
-        "value": 62000000
-      },
-      {
-        "name": "2010",
-        "value": 73000000
-      },
-      {
-        "name": "2011",
-        "value": 89400000
-      }
-    ]
-  },
+import { Component, OnInit, Input } from '@angular/core';
 
-  {
-    "name": "USA",
-    "series": [
-      {
-        "name": "1990",
-        "value": 250000000
-      },
-      {
-        "name": "2010",
-        "value": 309000000
-      },
-      {
-        "name": "2011",
-        "value": 311000000
-      }
-    ]
-  },
+export interface LineChartDataRow {
+  name: string;
+  series: Array<{ name: string, value: number }>;
+}
 
-  {
-    "name": "France",
-    "series": [
-      {
-        "name": "1990",
-        "value": 58000000
-      },
-      {
-        "name": "2010",
-        "value": 50000020
-      },
-      {
-        "name": "2011",
-        "value": 58000000
-      }
-    ]
-  },
-  {
-    "name": "UK",
-    "series": [
-      {
-        "name": "1990",
-        "value": 57000000
-      },
-      {
-        "name": "2010",
-        "value": 62000000
-      }
-    ]
-  }
-];
 
 @Component({
   selector: 'app-line-chart',
@@ -74,7 +12,7 @@ export var multi = [
   styleUrls: ['./line-chart.component.less']
 })
 export class LineChartComponent {
-  multi: any[];
+  @Input() data: LineChartDataRow[];
   // options
   legend: boolean = true;
   showLabels: boolean = true;
@@ -88,7 +26,6 @@ export class LineChartComponent {
   timeline: boolean = true;
 
   constructor() {
-    Object.assign(this, { multi });
   }
 
   onSelect(data): void {

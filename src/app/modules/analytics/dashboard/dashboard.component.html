@@ -1,14 +1,19 @@
 <h1 style="text-align: center;">Welcome to the analytics dashboard</h1>
 
-<div nz-row class="cards" [nzGutter]="30">
+<div nz-row>
+  <nz-select class="select-ad" [nzLoading]="loading" nzShowSearch nzAllowClear nzPlaceHolder="Select ad" [(ngModel)]="selectedAd">
+    <nz-option *ngFor="let ad of ads" [nzLabel]="ad.title" [nzValue]="ad"></nz-option>
+  </nz-select>
+</div>
+<div nz-row class="ant-cards-padding-h-0" [nzGutter]="30">
   <div nz-col nzSpan="12">
     <nz-card nzTitle="Sources Distribution">
-      <app-detailed-pie-chart class="full-width-chart"></app-detailed-pie-chart>
+      <app-detailed-pie-chart [data]="pieData" class="full-width-chart"></app-detailed-pie-chart>
     </nz-card>
   </div>
   <div nz-col nzSpan="12">
     <nz-card nzTitle="Views">
-      <app-line-chart class="full-width-chart"></app-line-chart>
+      <app-line-chart [data]="lineData" class="full-width-chart"></app-line-chart>
     </nz-card>
   </div>
   <div nz-col nzSpan="12">
