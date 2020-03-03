@@ -27,10 +27,17 @@ const defaultColorScheme = {
   ground: '#eeeeee',
 };
 
+const defaultStatFillColor = '#eeeeee';
+const activeStatFillColor = defaultColorScheme.regular;
+export type TooltipInfo = Array<{ name: string, value: string, color?: string }>;
+
+
 export interface MapStatDataRow {
   id: string;
   value: number;
-};
+  tooltip?: TooltipInfo;
+}
+
 @Component({
   selector: 'app-sofia-svg-map',
   templateUrl: './sofia-svg-map.component.html',
@@ -47,9 +54,20 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
 
   public zoomed = false;
   @ViewChild('sofiaSvgElement') sofiaSvgElement: ElementRef;
+  @ViewChild('tooltip') tooltipElementRef: ElementRef;
   private colorScheme = defaultColorScheme;
 
   public styles = this.getStyles();
+
+  tooltipInfo: TooltipInfo = [];
+  private lastTooltipId: any;
+
+  @Input() public disabled = false;
+  @Input() public formItem = false;
+  @Input() public statisticsData?: Array<MapStatDataRow>;
+  private onChange: (_: Array<string>) => void;
+  private onTouched: () => void;
+
   private getStyles() {
 
     return {
@@ -87,25 +105,18 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
     };
   }
 
-  @Input() public disabled = false;
-  @Input() public formItem = false;
-  @Input() public statisticsData?: Array<MapStatDataRow>;
-  private onChange: (_: Array<string>) => void;
-  private onTouched: () => void;
-
-
   ngOnChanges(changes: SimpleChanges) {
     const statisticsDataChange = changes.statisticsData;
     if (statisticsDataChange && statisticsDataChange.currentValue !== statisticsDataChange.previousValue) {
       if (this.statisticsData) {
         this.colorScheme = {
-          main: '#7aa3e5',
-          regular: '#7aa3e5',
-          secondary: '#7aa3e5',
-          external: '#7aa3e5',
-          parks: '#7aa3e5',
-          hills: '#7aa3e5',
-          ground: '#7aa3e5',
+          main: defaultStatFillColor,
+          regular: defaultStatFillColor,
+          secondary: defaultStatFillColor,
+          external: defaultStatFillColor,
+          parks: defaultStatFillColor,
+          hills: defaultStatFillColor,
+          ground: defaultStatFillColor,
         };
       } else {
         this.colorScheme = defaultColorScheme;
@@ -121,14 +132,14 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
       return;
     }
     const titles = this.svgElement.getElementsByTagName('title');
-    const defaultOpacityValue = .1;
+    const defaultOpacityValue = 1;
     for (let i = 0; i <= titles.length; i++) {
       const el = this.statisticsData?.find(v => {
 
         const r = v.id === titles[i]?.getAttribute('id');
         return r;
       });
-      this.setOpacity(el ? el.value : defaultOpacityValue, titles[i]);
+      this.setItemStatProps(el ? el.value : defaultOpacityValue, el != null, titles[i]);
     }
   }
 
@@ -167,10 +178,20 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
 
   ngAfterViewInit(): void {
     this.updateMapStats();
+    const els = this.svgElement.getElementsByTagName('title');
+    let r = '';
+    for (let i = 0; i < els.length; i++) {
+      r += `\n<title id="${els[i].id}">${els[i].textContent}</title>`;
+    }
+    console.log(r);
   }
 
   private get svgElement(): SVGElement | null {
     return this.sofiaSvgElement ? this.sofiaSvgElement.nativeElement as SVGElement : null;
+  }
+
+  private get tooltipElement(): HTMLElement | null {
+    return this.tooltipElementRef ? this.tooltipElementRef.nativeElement as HTMLElement : null;
   }
 
   onSvgClick(event: MouseEvent) {
@@ -185,6 +206,53 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
         this.setSelected(!this.isSelected(titleEl), titleEl);
         this.runOnChange();
       }
+    }
+  }
+  onMouseMove(event: MouseEvent) {
+    if (!this.statisticsData) {
+      return;
+    }
+
+    if (event.target instanceof SVGPathElement) {
+      this.updateTooltip(event, event.target);
+    } else {
+      this.tooltipInfo = null;
+    }
+  }
+
+  private updateTooltip(event: MouseEvent, target: SVGPathElement) {
+    const titles = target.getElementsByTagName('title');
+    if (titles?.length > 0) {
+      if (this.tooltipElementRef) {
+        // update tooltip position
+        let x = event.clientX;
+        let y = event.clientY;
+
+        this.tooltipElement.style.top = (y - 50) + 'px';
+        this.tooltipElement.style.left = (x + 10) + 'px';
+      }
+
+      const titleEl = titles[0];
+      if (titleEl.id === this.lastTooltipId) {
+        // same tooltip
+        return;
+      }
+      const statRow = this.statisticsData.find(v => v.id === titleEl.id);
+      if (!statRow) {
+        // now data for selected area
+        this.tooltipInfo = null;
+        return;
+      }
+      this.lastTooltipId = titleEl.id;
+      this.tooltipInfo = [
+        {
+          name: 'Area',
+          value: titleEl.textContent
+        },
+        ...statRow?.tooltip
+      ];
+    } else {
+      this.tooltipInfo = null;
     }
   }
 
@@ -213,10 +281,10 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
     }
   }
 
-  private setOpacity(value: number | string, titleElement?: HTMLElement) {
+  private setItemStatProps(value: number | string, active: boolean, titleElement?: HTMLElement) {
     if (titleElement) {
       const path: HTMLElement = titleElement.parentElement;
-      console.log('set ', value)
+      path.style.fill = active ? activeStatFillColor : defaultStatFillColor;
       path.style.fillOpacity = `${value}`;
     }
   }

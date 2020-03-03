@@ -1,29 +1,42 @@
 import { Component, OnInit, Input } from '@angular/core';
-
-export interface LineChartDataRow {
+export interface RetentionChartDataRow {
   name: string;
   series: Array<{ name: string, value: number }>;
 }
 
-
 @Component({
-  selector: 'app-line-chart',
-  templateUrl: './line-chart.component.html',
-  styleUrls: ['./line-chart.component.less']
+  selector: 'app-retention-chart',
+  templateUrl: './retention-chart.component.html',
+  styleUrls: ['./retention-chart.component.less']
 })
-export class LineChartComponent {
-  @Input() data: LineChartDataRow[];
+export class RetentionChartComponent {
+
+  @Input() data: RetentionChartDataRow[];
   // options
-  legend: boolean = true;
+  legend: boolean = false;
   showLabels: boolean = true;
   animations: boolean = true;
   xAxis: boolean = true;
   yAxis: boolean = true;
   showYAxisLabel: boolean = true;
   showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Day';
-  yAxisLabel: string = 'Views';
-  timeline: boolean = true;
+  xAxisLabel: string = '';
+  yAxisLabel: string = '';
+
+  colorScheme = {
+    domain: [
+      '#7aa3e5',
+      // '#9abbf1',
+      // '#a8c5f3',
+      // '#b1cdfa',
+      // '#b7d0f8',
+      // '#bbd1f5',
+      // '#cbdfff',
+      // '#dde9fd',
+      // '#f0f5ff',
+      '#eee',
+    ].reverse()
+  };
 
   constructor() {
   }
@@ -39,6 +52,4 @@ export class LineChartComponent {
   onDeactivate(data): void {
     // console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
-
 }
-

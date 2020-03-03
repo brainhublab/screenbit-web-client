@@ -72,9 +72,8 @@ export class CreateAdComponent implements OnInit {
     this.loading = true;
     ad = {
       ...ad,
-      percent_to_load: ad.desired_viewers / this.max_desired_viewers
+      percent_to_load: Math.round((ad.desired_viewers / this.max_desired_viewers) * 100)
     };
-    console.log(ad)
     this.adsService.post(ad)
       .subscribe(
         (event: HttpEvent<{} | Ad>) => {
@@ -140,7 +139,6 @@ export class CreateAdComponent implements OnInit {
         } else {
           this.max_desired_viewers = 0;
         }
-        console.log(v, this.max_desired_viewers)
       }
       this.marks = {
         1: 1,

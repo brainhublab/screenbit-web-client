@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { Ad } from 'src/app/models/ad';
 import { LineChartDataRow } from '../../common/charts/line-chart/line-chart.component';
 import { MapStatDataRow } from '../../common/charts/sofia-svg-map/sofia-svg-map.component';
+import { RetentionChartDataRow } from '../../common/charts/retention-chart/retention-chart.component';
 
 function datediff(first, second) {
   // Take the difference between the dates and divide by milliseconds per day.
@@ -28,6 +29,7 @@ export class AdStatsComponent implements OnInit, OnChanges {
   @Input() ad: Ad;
   public lineData: Array<LineChartDataRow> = [];
   public mapData: Array<MapStatDataRow> = [];
+  public retentionData: Array<RetentionChartDataRow> = [];
 
   from: Date;
   to: Date;
@@ -83,18 +85,29 @@ export class AdStatsComponent implements OnInit, OnChanges {
         })
       }];
       this.mapData = this.ad.areas.map(a => {
-        return { id: a, value: .5 }
+        return {
+          id: a, value: parseInt(a) / 100 * .5, tooltip: [
+            {
+              name: 'Viewers',
+              value: `${parseInt(a) * 100}`,
+              color: 'red'
+            }
+          ]
+        };
       });
-      console.log(this.ad.areas, this.mapData);
-      // {
-      //   id: '152',
-      //   value: 1
-      // },
-      // {
-      //   id: '201',
-      //   value: .3
-      // }
-      // ]
+
+      this.retentionData = [...new Array(5)].map((v, i) => {
+
+        return {
+          name: `Week ${i}`,
+          series: series.slice(0, 6).map((sv, j) => {
+            return {
+              name: sv.name,
+              value: 100 - 10 * (i + j)
+            }
+          })
+        };
+      });
     }
   }
 

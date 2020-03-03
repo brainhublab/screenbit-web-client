@@ -1,4 +1,8 @@
-<div class="wrapper" [class.fullscreen]="zoomed">
+<div
+  class="wrapper"
+  [class.fullscreen]="zoomed"
+  (mousemove)="onMouseMove($event)"
+>
   <i
     nz-icon
     class="zoom-icon"
@@ -6,7 +10,21 @@
     (click)="zoomed = !zoomed"
     nzTheme="outline"
   ></i>
-
+  <div
+    *ngIf="statisticsData"
+    class="tooltip"
+    #tooltip
+    [class.visible]="tooltipInfo?.length > 0"
+  >
+    <p class="tooltip-item" *ngFor="let ti of tooltipInfo">
+      <span
+        class="tooltip-item-color"
+        [style.background]="ti.color || '#FF3333'"
+      ></span>
+      <span class="tooltip-item-title"> {{ ti.name }}: </span>
+      <span class="tooltip-item-value">{{ ti.value }}</span>
+    </p>
+  </div>
   <svg
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:cc="http://creativecommons.org/ns#"
@@ -14,6 +32,7 @@
     xmlns:svg="http://www.w3.org/2000/svg"
     xmlns="http://www.w3.org/2000/svg"
     version="1.1"
+    class="svg-map"
     viewBox="0 0 510 510"
     #sofiaSvgElement
     (click)="onSvgClick($event)"

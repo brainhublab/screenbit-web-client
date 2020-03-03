@@ -8,6 +8,7 @@ import { CalendarChartComponent } from './calendar-chart/calendar-chart.componen
 import { TreeMapChartComponent } from './tree-map-chart/tree-map-chart.component';
 import { SofiaSvgMapComponent } from './sofia-svg-map/sofia-svg-map.component';
 import { SofiaSvgMapModule } from './sofia-svg-map/sofia-svg-map.module';
+import { RetentionChartComponent } from './retention-chart/retention-chart.component';
 
 const moduleSharedComponents = [
   LineChartComponent,
@@ -15,6 +16,7 @@ const moduleSharedComponents = [
   DetailedPieChartComponent,
   CalendarChartComponent,
   TreeMapChartComponent,
+  RetentionChartComponent,
 ];
 
 @NgModule({
