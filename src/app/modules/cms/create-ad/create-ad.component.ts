@@ -136,7 +136,7 @@ export class CreateAdComponent implements OnInit {
     this.validateForm.controls.areas.valueChanges.subscribe((v: Array<string>) => {
       if (v) {
         if (v.length > 0) {
-        this.max_desired_viewers = v.map(s => parseInt(s)).reduce((acc: number, cv) => acc + (cv * 1100));
+        this.max_desired_viewers = v.map(s => parseInt(s)).reduce((acc: number, cv) => acc + (cv * 1100), 0);
         } else {
           this.max_desired_viewers = 0;
         }
