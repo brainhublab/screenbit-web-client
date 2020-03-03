@@ -12,6 +12,9 @@ export interface CreateAdPdto {
   hours: Array<number>;
   media_file: UploadFile;
   areas: Array<number>;
+  duration?: number;
+  percent_to_load: number;
+  desired_viewers: number;
 }
 
 @Injectable({

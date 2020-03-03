@@ -1,36 +1,21 @@
 <h1 style="text-align: center;">Welcome to the analytics dashboard</h1>
 
 <div nz-row>
-  <nz-select class="select-ad" [nzLoading]="loading" nzShowSearch nzAllowClear nzPlaceHolder="Select ad" [(ngModel)]="selectedAd">
-    <nz-option *ngFor="let ad of ads" [nzLabel]="ad.title" [nzValue]="ad"></nz-option>
+  <nz-select
+    class="select-ad"
+    [nzLoading]="loading"
+    nzShowSearch
+    nzAllowClear
+    nzPlaceHolder="Select ad"
+    [(ngModel)]="selectedAd"
+  >
+    <nz-option
+      *ngFor="let ad of ads"
+      [nzLabel]="ad.title"
+      [nzValue]="ad"
+    ></nz-option>
   </nz-select>
 </div>
-<div nz-row class="ant-cards-padding-h-0" [nzGutter]="30">
-  <div nz-col nzSpan="12">
-    <nz-card nzTitle="Sources Distribution">
-      <app-detailed-pie-chart [data]="pieData" class="full-width-chart"></app-detailed-pie-chart>
-    </nz-card>
-  </div>
-  <div nz-col nzSpan="12">
-    <nz-card nzTitle="Views">
-      <app-line-chart [data]="lineData" class="full-width-chart"></app-line-chart>
-    </nz-card>
-  </div>
-  <div nz-col nzSpan="12">
-    <nz-card nzTitle="Views by region">
-      <app-sofia-svg-map></app-sofia-svg-map>
-    </nz-card>
-  </div>
-  <div nz-col nzSpan="12">
-    <nz-card nzTitle="Active hours">
-      <app-vbar-chart class="full-width-chart"></app-vbar-chart>
-    </nz-card>
-  </div>
-  <div nz-col nzSpan="12">
-    <nz-card nzTitle="Active days">
-      <app-calendar-chart class="full-width-chart small"></app-calendar-chart>
-    </nz-card>
-  </div>
 
-
-</div>
+<app-ad-stats *ngIf="selectedAd" [ad]="selectedAd"></app-ad-stats>
+<app-summary *ngIf="!selectedAd" [ads]="ads"></app-summary>

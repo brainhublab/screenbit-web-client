@@ -7,10 +7,12 @@ import { NzLayoutModule, NzMenuModule, NzIconModule, NzCardModule, NzGridModule,
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ChartsModule } from '../common/charts/charts.module';
 import { FormsModule } from '@angular/forms';
+import { SummaryComponent } from './summary/summary.component';
+import { AdStatsComponent } from './ad-stats/ad-stats.component';
 
 
 @NgModule({
-  declarations: [AnalyticsEntryComponent, DashboardComponent],
+  declarations: [AnalyticsEntryComponent, DashboardComponent, SummaryComponent, AdStatsComponent],
   imports: [
     CommonModule,
     FormsModule,

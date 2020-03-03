@@ -17,12 +17,12 @@ export class CreateAdComponent implements OnInit {
   public loading = false;
   percent = 0;
   areasOptions: Array<Area> = [];
-  public max_potential_views = 10;
+  public max_desired_viewers = 0;
   public selected_media_type: 'IM' | 'VD' = null;
 
   public marks: any = {
     0: 0,
-    [this.max_potential_views]: this.max_potential_views
+    [this.max_desired_viewers]: this.max_desired_viewers
   };
 
 
@@ -69,9 +69,12 @@ export class CreateAdComponent implements OnInit {
 
   private createAd(ad: CreateAdPdto) {
 
-    console.log(ad);
-    return;
     this.loading = true;
+    ad = {
+      ...ad,
+      percent_to_load: ad.desired_viewers / this.max_desired_viewers
+    };
+    console.log(ad)
     this.adsService.post(ad)
       .subscribe(
         (event: HttpEvent<{} | Ad>) => {
@@ -122,23 +125,26 @@ export class CreateAdComponent implements OnInit {
       duration: [10, [this.requiredIfImage]],
       hours: [null, Validators.required],
       areas: [null, [Validators.required, Validators.minLength(1)]],
-      potential_views: [1, [
+      desired_viewers: [1, [
         Validators.required,
         Validators.min(10),
-        (control: AbstractControl) => Validators.max(this.max_potential_views)(control)
+        (control: AbstractControl) => Validators.max(this.max_desired_viewers)(control)
       ]],
     });
     this.reloadAreas();
 
     this.validateForm.controls.areas.valueChanges.subscribe((v: Array<string>) => {
       if (v) {
-        this.max_potential_views = v.length * (Math.floor(Math.random() * (200000 - 1 + 1)) + 1);
-      } else {
-        this.max_potential_views = 10;
+        if (v.length > 0) {
+        this.max_desired_viewers = v.map(s => parseInt(s)).reduce((acc: number, cv) => acc + (cv * 1100));
+        } else {
+          this.max_desired_viewers = 0;
+        }
+        console.log(v, this.max_desired_viewers)
       }
       this.marks = {
         1: 1,
-        [this.max_potential_views]: this.max_potential_views
+        [this.max_desired_viewers]: this.max_desired_viewers
       };
     });
 

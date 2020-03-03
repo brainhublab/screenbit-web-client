@@ -1,0 +1,26 @@
+<div nz-row class="ant-cards-padding-h-0" [nzGutter]="30">
+  <div nz-col nzSpan="24">
+    <nz-card nzTitle="Views">
+      <app-line-chart
+      *ngIf="lineData"
+        [data]="lineData"
+        class="full-width-chart"
+      ></app-line-chart>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="12">
+    <nz-card nzTitle="Views by region">
+      <app-sofia-svg-map [statisticsData]="mapData"></app-sofia-svg-map>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="12">
+    <nz-card nzTitle="Active hours">
+      <app-vbar-chart class="full-width-chart"></app-vbar-chart>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="12">
+    <nz-card nzTitle="Active days">
+      <app-calendar-chart class="full-width-chart small"></app-calendar-chart>
+    </nz-card>
+  </div>
+</div>

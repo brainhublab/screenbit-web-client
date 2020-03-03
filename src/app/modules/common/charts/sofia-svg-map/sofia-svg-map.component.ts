@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Input, forwardRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Input, forwardRef, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 const commonStyle = {
@@ -9,6 +9,28 @@ const commonStyle = {
   'stroke-miterlimit': '10',
 }
 
+
+const defaultColorScheme = {
+  // main: '#dac1a7',
+  // regular: '#dac1a7', //dad1a7',
+  // secondary: '#eddfd0',
+  // external: '#dca48f',
+  // parks: '#2b8028',
+  // hills: '#add6a8',
+  // ground: '#eeeeee',
+  main: '#8796c0',
+  regular: '#7aa3e5',
+  secondary: '#adcded',
+  external: '#ad6886',
+  parks: '#00b862',
+  hills: '#add6a8',
+  ground: '#eeeeee',
+};
+
+export interface MapStatDataRow {
+  id: string;
+  value: number;
+};
 @Component({
   selector: 'app-sofia-svg-map',
   templateUrl: './sofia-svg-map.component.html',
@@ -21,66 +43,94 @@ const commonStyle = {
     }
   ]
 })
-export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit {
+export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
 
   public zoomed = false;
   @ViewChild('sofiaSvgElement') sofiaSvgElement: ElementRef;
-  public readonly colorScheme = {
-    // main: '#dac1a7',
-    // regular: '#dac1a7', //dad1a7',
-    // secondary: '#eddfd0',
-    // external: '#dca48f',
-    // parks: '#2b8028',
-    // hills: '#add6a8',
-    // ground: '#eeeeee',
-    main: '#8796c0',
-    regular: '#7aa3e5',
-    secondary: '#adcded',
-    external: '#ad6886',
-    parks: '#00b862',
-    hills: '#add6a8',
-    ground: '#eeeeee',
-  };
+  private colorScheme = defaultColorScheme;
 
-  public readonly styles = {
-    main: {
-      fill: this.colorScheme.main,
-      ...commonStyle
-    },
-    regular: {
-      fill: this.colorScheme.regular,
-      ...commonStyle
-    },
-    secondary: {
-      fill: this.colorScheme.secondary,
-      ...commonStyle
-    },
-    external: {
-      fill: this.colorScheme.external,
-      ...commonStyle
-    },
-    externalSimple: {
-      fill: this.colorScheme.external,
-    },
-    parks: {
-      fill: this.colorScheme.parks,
-      ...commonStyle
-    },
-    hills: {
-      fill: this.colorScheme.hills,
-      ...commonStyle
-    },
-    ground: {
-      fill: this.colorScheme.ground,
-      ...commonStyle
-    },
-  };
+  public styles = this.getStyles();
+  private getStyles() {
+
+    return {
+      main: {
+        fill: this.colorScheme.main,
+        ...commonStyle
+      },
+      regular: {
+        fill: this.colorScheme.regular,
+        ...commonStyle
+      },
+      secondary: {
+        fill: this.colorScheme.secondary,
+        ...commonStyle
+      },
+      external: {
+        fill: this.colorScheme.external,
+        ...commonStyle
+      },
+      externalSimple: {
+        fill: this.colorScheme.external,
+      },
+      parks: {
+        fill: this.colorScheme.parks,
+        ...commonStyle
+      },
+      hills: {
+        fill: this.colorScheme.hills,
+        ...commonStyle
+      },
+      ground: {
+        fill: this.colorScheme.ground,
+        ...commonStyle
+      },
+    };
+  }
 
   @Input() public disabled = false;
   @Input() public formItem = false;
+  @Input() public statisticsData?: Array<MapStatDataRow>;
   private onChange: (_: Array<string>) => void;
   private onTouched: () => void;
 
+
+  ngOnChanges(changes: SimpleChanges) {
+    const statisticsDataChange = changes.statisticsData;
+    if (statisticsDataChange && statisticsDataChange.currentValue !== statisticsDataChange.previousValue) {
+      if (this.statisticsData) {
+        this.colorScheme = {
+          main: '#7aa3e5',
+          regular: '#7aa3e5',
+          secondary: '#7aa3e5',
+          external: '#7aa3e5',
+          parks: '#7aa3e5',
+          hills: '#7aa3e5',
+          ground: '#7aa3e5',
+        };
+      } else {
+        this.colorScheme = defaultColorScheme;
+      }
+      this.styles = this.getStyles();
+      this.updateMapStats();
+    } else {
+    }
+  }
+
+  private updateMapStats() {
+    if (!this.svgElement || !this.statisticsData) {
+      return;
+    }
+    const titles = this.svgElement.getElementsByTagName('title');
+    const defaultOpacityValue = .1;
+    for (let i = 0; i <= titles.length; i++) {
+      const el = this.statisticsData?.find(v => {
+
+        const r = v.id === titles[i]?.getAttribute('id');
+        return r;
+      });
+      this.setOpacity(el ? el.value : defaultOpacityValue, titles[i]);
+    }
+  }
 
   private get isEditable() {
     return !this.disabled && this.formItem;
@@ -116,6 +166,7 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
   constructor() { }
 
   ngAfterViewInit(): void {
+    this.updateMapStats();
   }
 
   private get svgElement(): SVGElement | null {
@@ -159,6 +210,14 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
       } else {
         path.classList.remove('selected');
       }
+    }
+  }
+
+  private setOpacity(value: number | string, titleElement?: HTMLElement) {
+    if (titleElement) {
+      const path: HTMLElement = titleElement.parentElement;
+      console.log('set ', value)
+      path.style.fillOpacity = `${value}`;
     }
   }
 

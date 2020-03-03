@@ -1,15 +1,15 @@
 import fileinput
 import re
 
-fn = "test.html"
+fn = "sofia-svg-map.component.copy.html"
 
 counter = 0
 
-pattern = re.compile("\s*<title>(.*)</title>")
+pattern = re.compile("\s*<title(.*)>")
 
 for line in fileinput.input(fn, inplace=1):
     if pattern.match(line):
-        newline = re.sub(r'<title>(.*)</title>',r'<title id="{}">\1</title>'.format(counter), line.rstrip())
+        newline = re.sub(r'<title(.*)',r'<title id="{}"\1'.format(counter), line.rstrip())
         counter += 1
         print(newline)
     else:
