@@ -6,6 +6,7 @@ import { AdsService, CreateAdPdto } from 'src/app/services/ads.service';
 import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Area, Ad } from 'src/app/models/ad';
 import { Router, ActivatedRoute } from '@angular/router';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-ad',
@@ -14,16 +15,91 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class CreateAdComponent implements OnInit {
   validateForm: FormGroup;
-  public loading = false;
+  loading = false;
   percent = 0;
   areasOptions: Array<Area> = [];
-  public max_desired_viewers = 0;
-  public selected_media_type: 'IM' | 'VD' = null;
+  max_desired_viewers = 0;
+  selected_media_type: 'IM' | 'VD' = null;
 
-  public marks: any = {
+  marks: any = {
     0: 0,
     [this.max_desired_viewers]: this.max_desired_viewers
   };
+  formatterDuration = (value: number) => `${value} s`;
+  parserDuration = (value: string) => value.replace(' s', '');
+
+  requiredIfImage = (control: AbstractControl): ValidationErrors | null => {
+    return this.selected_media_type === 'IM' && !control.value ? { required: true } : null;
+  }
+
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly msg: NzMessageService,
+    private readonly adsService: AdsService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+  ) { }
+
+
+  public goBack() {
+    this.router.navigate(['..'], { relativeTo: this.route });
+  }
+
+  ngOnInit(): void {
+    this.initForm();
+    this.reloadAreas();
+
+    this.validateForm.controls.areas.valueChanges.pipe(debounceTime(2000)).subscribe(this.updateMaxDesiredViewers);
+    this.validateForm.controls.media_file.valueChanges.pipe(debounceTime(1000)).subscribe(this.updateMediaFileType);
+  }
+
+  private initForm() {
+    this.validateForm = this.fb.group({
+      title: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      description: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(500)]],
+      media_file: [null, Validators.required],
+      duration: [10, [this.requiredIfImage]],
+      hours: [null, Validators.required],
+      areas: [null, [Validators.required, Validators.minLength(1)]],
+      desired_viewers: [1, [
+        Validators.required,
+        Validators.min(10),
+        (control: AbstractControl) => Validators.max(this.max_desired_viewers)(control)
+      ]],
+    });
+  }
+
+  private updateMediaFileType = (file: UploadFile) => {
+    if (!file) {
+      this.selected_media_type = null;
+    } else if (file.type.startsWith('video')) {
+      this.selected_media_type = 'VD';
+    } else if (file.type.startsWith('image')) {
+      this.selected_media_type = 'IM';
+    }
+  }
+
+  private updateMaxDesiredViewers = async (v: Array<string>) => {
+    if (v) {
+      if (v.length > 0) {
+        this.max_desired_viewers = v.map(s => parseInt(s)).reduce((acc: number, cv) => acc + (cv * 1100), 0);
+      } else {
+        this.max_desired_viewers = 0;
+      }
+    }
+    this.marks = {
+      1: 1,
+      [this.max_desired_viewers]: this.max_desired_viewers
+    };
+  }
+
+  private async reloadAreas() {
+    try {
+      this.areasOptions = await this.adsService.getAreas().toPromise();
+    } catch (e) {
+      console.error("Error loading areas...");
+    }
+  }
 
 
   beforeUpload = (file: File) => {
@@ -40,19 +116,20 @@ export class CreateAdComponent implements OnInit {
       observer.next(isLt50M);
       observer.complete();
     });
-  };
+  }
 
   upload = (item: UploadXHRArgs): Subscription => {
     return new Observable<null>().subscribe();
-  };
+  }
 
-  handleChange(info: { file: UploadFile, type: string, fileList: Array<UploadFile> }): void {
+  handleFileChange(info: { file: UploadFile, type: string, fileList: Array<UploadFile> }): void {
     this.loading = false;
     info.file.status = 'success';
     this.validateForm.patchValue({
       media_file: info.fileList.length > 0 ? info.fileList[0] : null
     });
   }
+
 
   submitForm(): void {
     for (const i in this.validateForm.controls) {
@@ -97,75 +174,4 @@ export class CreateAdComponent implements OnInit {
         });
   }
 
-
-
-  constructor(
-    private readonly fb: FormBuilder,
-    private readonly msg: NzMessageService,
-    private readonly adsService: AdsService,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-  ) { }
-
-
-  public goBack() {
-    this.router.navigate(['..'], { relativeTo: this.route });
-  }
-
-  requiredIfImage = (control: AbstractControl): ValidationErrors | null => {
-    return this.selected_media_type === 'IM' && !control.value ? { required: true } : null;
-  }
-
-  ngOnInit(): void {
-    this.validateForm = this.fb.group({
-      title: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      description: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(500)]],
-      media_file: [null, Validators.required],
-      duration: [10, [this.requiredIfImage]],
-      hours: [null, Validators.required],
-      areas: [null, [Validators.required, Validators.minLength(1)]],
-      desired_viewers: [1, [
-        Validators.required,
-        Validators.min(10),
-        (control: AbstractControl) => Validators.max(this.max_desired_viewers)(control)
-      ]],
-    });
-    this.reloadAreas();
-
-    this.validateForm.controls.areas.valueChanges.subscribe((v: Array<string>) => {
-      if (v) {
-        if (v.length > 0) {
-        this.max_desired_viewers = v.map(s => parseInt(s)).reduce((acc: number, cv) => acc + (cv * 1100), 0);
-        } else {
-          this.max_desired_viewers = 0;
-        }
-      }
-      this.marks = {
-        1: 1,
-        [this.max_desired_viewers]: this.max_desired_viewers
-      };
-    });
-
-    this.validateForm.controls.media_file.valueChanges.subscribe((file: UploadFile) => {
-      if (!file) {
-        this.selected_media_type = null;
-      } else if (file.type.startsWith('video')) {
-        this.selected_media_type = 'VD';
-      } else if (file.type.startsWith('image')) {
-        this.selected_media_type = 'IM';
-      }
-    });
-  }
-
-  private async reloadAreas() {
-    try {
-      this.areasOptions = await this.adsService.getAreas().toPromise();
-    } catch (e) {
-      console.error("Error loading areas...");
-    }
-  }
-
-
-  formatterDuration = (value: number) => `${value} s`;
-  parserDuration = (value: string) => value.replace(' s', '');
 }

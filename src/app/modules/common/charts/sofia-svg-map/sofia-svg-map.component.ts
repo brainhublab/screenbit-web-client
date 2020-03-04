@@ -178,12 +178,12 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
 
   ngAfterViewInit(): void {
     this.updateMapStats();
-    const els = this.svgElement.getElementsByTagName('title');
-    let r = '';
-    for (let i = 0; i < els.length; i++) {
-      r += `\n<title id="${els[i].id}">${els[i].textContent}</title>`;
-    }
-    console.log(r);
+    // const els = this.svgElement.getElementsByTagName('title');
+    // let r = '';
+    // for (let i = 0; i < els.length; i++) {
+    //   r += `\n<title id="${els[i].id}">${els[i].textContent}</title>`;
+    // }
+    // console.log(r);
   }
 
   private get svgElement(): SVGElement | null {

@@ -42,7 +42,7 @@
         [nzCustomRequest]="upload"
         [nzMultiple]="false"
         [nzLimit]="1"
-        (nzChange)="handleChange($event)"
+        (nzChange)="handleFileChange($event)"
         [nzListType]="'picture'"
         [nzDisabled]="validateForm.controls.media_file.value != null"
       >
