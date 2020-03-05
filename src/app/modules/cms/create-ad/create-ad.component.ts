@@ -51,7 +51,7 @@ export class CreateAdComponent implements OnInit {
     this.initForm();
     this.reloadAreas();
 
-    this.validateForm.controls.areas.valueChanges.pipe(debounceTime(2000)).subscribe(this.updateMaxDesiredViewers);
+    this.validateForm.controls.areas.valueChanges.pipe(debounceTime(1000)).subscribe(this.updateMaxDesiredViewers);
     this.validateForm.controls.media_file.valueChanges.pipe(debounceTime(1000)).subscribe(this.updateMediaFileType);
   }
 
