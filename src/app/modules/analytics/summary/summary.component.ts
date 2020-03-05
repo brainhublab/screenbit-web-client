@@ -51,7 +51,12 @@ export class SummaryComponent implements OnInit, OnChanges {
     this.pieData = ads.map(v => {
       return { name: v.title, value: v.id * 112 };
     });
-    this.lineData = ads.map(v => {
+    this.lineData = this.getLineData(ads);
+    this.mapData = this.getMapData();
+  }
+
+  private getLineData(ads: Array<Ad>) {
+    return ads.map(v => {
       return {
         name: v.title,
         series: this.dates.map((date: Date) => {
@@ -62,20 +67,26 @@ export class SummaryComponent implements OnInit, OnChanges {
         })
       };
     });
-    this.mapData = [...Array(217).keys()].map(a => {
+  }
+
+  private getMapData(): Array<MapStatDataRow> {
+    return [...Array(217).keys()].map(a => {
       return {
         id: a.toString(),
         value: a / 100 * .5,
         tooltip: [
           {
-            name: 'Viewers',
+            name: 'Potential Viewers',
             value: `${a * 100}`,
-            color: 'red'
+            color: 'blue'
+          },
+          {
+            name: 'Reached Viewers',
+            value: `${Math.round(a * 100 * Math.random())}`,
+            color: 'green'
           }
         ]
       };
     });
-
-
   }
 }
