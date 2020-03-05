@@ -15,7 +15,7 @@ export class StationsService {
 
 
   public getAreasViewers(areasIds: Array<string>) {
-    return this.http.get<Array<{ viewers__sum: number | null }>>(`${this.basePath}/areas/viewers/`, {
+    return this.http.get<{ viewers__sum: number | null }>(`${this.basePath}/areas/viewers/`, {
       params: {
         areas: areasIds
       }

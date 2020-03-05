@@ -10,6 +10,8 @@ function datediff(first, second) {
   return Math.round((second - first) / (1000 * 60 * 60 * 24));
 }
 
+type Series = Array<{ name: string, value: number }>;
+
 const getDaysArray = (s, e) => {
   let start = new Date(s);
   let end = new Date(e);
@@ -30,6 +32,7 @@ export class AdStatsComponent implements OnInit, OnChanges {
   public lineData: Array<LineChartDataRow> = [];
   public mapData: Array<MapStatDataRow> = [];
   public retentionData: Array<RetentionChartDataRow> = [];
+  private readonly emptyCells: Array<[any, any]> = [[0, 3], [1, 1], [1, 5], [2, 4], [4, 3]];
 
   from: Date;
   to: Date;
@@ -40,6 +43,16 @@ export class AdStatsComponent implements OnInit, OnChanges {
     this.initDates();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    const adChange = changes.ad;
+    if (adChange.currentValue) {
+      const series: Series = this.generateSeries();
+      this.lineData = this.generateLineData(series);
+      this.mapData = this.generateMapData();
+      this.retentionData = this.generateRetentionData(series);
+    }
+  }
+
   private initDates() {
     if (!this.from || !this.to) {
       this.from = new Date();
@@ -48,67 +61,74 @@ export class AdStatsComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    const adChange = changes.ad;
-    if (adChange.currentValue) {
-      this.initDates();
-      console.log(this.from, this.to);
-      const days = getDaysArray(this.from, this.to);
-      console.log(days.length);
-      const series = days.map((date: Date, index) => {
-        const r = {
-          name: `${date.toLocaleDateString()}`,
-          value: Math.round(this.ad.areas.length * this.ad.hours.length * Math.random() * 1000)
-        };
-        return r;
-      });
-      this.lineData = [{
-        name: 'Views',
-        series: series
-      },
-      {
-        name: 'Potential Views',
-        series: series.map(v => {
-          return { ...v, value: Math.round(this.ad.areas.length * this.ad.hours.length * 1000) }
-        })
-      },
-      {
-        name: 'Reached Views',
-        series: series.map(v => {
-          return { ...v, value: Math.round(this.ad.areas.length * this.ad.hours.length * Math.random() * 1000) }
-        })
-      },
-      {
-        name: 'Slides in',
-        series: series.map(v => {
-          return { ...v, value: Math.round(this.ad.areas.length * Math.random() * 1000) }
-        })
-      }];
-      this.mapData = this.ad.areas.map(a => {
-        return {
-          id: a, value: parseInt(a) / 100 * .5, tooltip: [
-            {
-              name: 'Viewers',
-              value: `${parseInt(a) * 100}`,
-              color: 'red'
-            }
-          ]
-        };
-      });
+  private generateSeries(): Series {
+    this.initDates();
+    const days = getDaysArray(this.from, this.to);
+    return days.map((date: Date, index) => {
+      const r = {
+        name: `${date.toLocaleDateString()}`,
+        value: Math.round(this.ad.areas.length * this.ad.hours.length * Math.random() * 1000)
+      };
+      return r;
+    });
+  }
 
-      this.retentionData = [...new Array(5)].map((v, i) => {
+  private generateRetentionData = (series: Series) => {
+    return [...new Array(5)].map((v, wi) => {
+      return {
+        name: `Week ${wi}`,
+        series: series.slice(0, 6).map((sv, j) => {
+          let value = 100 - 10 * (wi + j);
+          const idxs = [wi, j];
+          if (this.emptyCells.find(v => v[0] === idxs[0] && v[1] === idxs[1])) {
+            value = 1;
+          }
+          return {
+            name: sv.name,
+            value
+          };
+        })
+      };
+    });
+  }
 
-        return {
-          name: `Week ${i}`,
-          series: series.slice(0, 6).map((sv, j) => {
-            return {
-              name: sv.name,
-              value: 100 - 10 * (i + j)
-            }
-          })
-        };
-      });
-    }
+  private generateMapData() {
+    return this.ad.areas.map(a => {
+      return {
+        id: a, value: parseInt(a) / 100 * .5, tooltip: [
+          {
+            name: 'Viewers',
+            value: `${parseInt(a) * 100}`,
+            color: 'red'
+          }
+        ]
+      };
+    });
+  }
+  private generateLineData(series: Series) {
+    return [{
+      name: 'Views',
+      series
+    },
+    {
+      name: 'Potential Views',
+      series: series.map(v => {
+        return { ...v, value: Math.round(this.ad.areas.length * this.ad.hours.length * 1000) }
+      })
+    },
+    {
+      name: 'Reached Views',
+      series: series.map(v => {
+        return { ...v, value: Math.round(this.ad.areas.length * this.ad.hours.length * Math.random() * 1000) }
+      })
+    },
+    {
+      name: 'Slides in',
+      series: series.map(v => {
+        return { ...v, value: Math.round(this.ad.areas.length * Math.random() * 1000) }
+      })
+    }];
+
   }
 
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Input, forwardRef, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 const commonStyle = {
   'stroke': '#ffffff',
@@ -50,7 +51,7 @@ export interface MapStatDataRow {
     }
   ]
 })
-export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
+export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit, OnChanges, OnInit {
 
   public zoomed = false;
   @ViewChild('sofiaSvgElement') sofiaSvgElement: ElementRef;
@@ -67,6 +68,19 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
   @Input() public statisticsData?: Array<MapStatDataRow>;
   private onChange: (_: Array<string>) => void;
   private onTouched: () => void;
+
+  private mouseMoveEventsSubject = new BehaviorSubject<MouseEvent>(null);
+  private mouseMoveSubscription: Subscription;
+
+  ngOnInit() {
+    this.mouseMoveSubscription = this.mouseMoveEventsSubject.subscribe(this.updateTooltip);
+  }
+
+  ngOnDestroy() {
+    if (this.mouseMoveSubscription) {
+      this.mouseMoveSubscription.unsubscribe();
+    }
+  }
 
   private getStyles() {
 
@@ -208,19 +222,20 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
       }
     }
   }
+
   onMouseMove(event: MouseEvent) {
     if (!this.statisticsData) {
       return;
     }
-
-    if (event.target instanceof SVGPathElement) {
-      this.updateTooltip(event, event.target);
-    } else {
-      this.tooltipInfo = null;
-    }
+    this.mouseMoveEventsSubject.next(event);
   }
 
-  private updateTooltip(event: MouseEvent, target: SVGPathElement) {
+  private updateTooltip = (event: MouseEvent | null) => {
+    if (!event || !(event.target instanceof SVGPathElement)) {
+      this.tooltipInfo = null;
+      return;
+    }
+    const target = event.target;
     const titles = target.getElementsByTagName('title');
     if (titles?.length > 0) {
       if (this.tooltipElementRef) {

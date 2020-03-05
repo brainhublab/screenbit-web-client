@@ -6,7 +6,8 @@ import { AdsService, CreateAdPdto } from 'src/app/services/ads.service';
 import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Area, Ad } from 'src/app/models/ad';
 import { Router, ActivatedRoute } from '@angular/router';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, map, catchError } from 'rxjs/operators';
+import { StationsService } from 'src/app/services/stations.service';
 
 @Component({
   selector: 'app-create-ad',
@@ -36,6 +37,7 @@ export class CreateAdComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly msg: NzMessageService,
     private readonly adsService: AdsService,
+    private readonly stationsService: StationsService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
   ) { }
@@ -80,17 +82,26 @@ export class CreateAdComponent implements OnInit {
   }
 
   private updateMaxDesiredViewers = async (v: Array<string>) => {
-    if (v) {
-      if (v.length > 0) {
-        this.max_desired_viewers = v.map(s => parseInt(s)).reduce((acc: number, cv) => acc + (cv * 1100), 0);
-      } else {
-        this.max_desired_viewers = 0;
+    if (v && v.length > 0) {
+      // this.max_desired_viewers = v.map(s => parseInt(s)).reduce((acc: number, cv) => acc + (cv * 1100), 0);
+      try {
+        this.max_desired_viewers = await this.getMaxDesiredViewers(v).toPromise();
+        console.log(this.max_desired_viewers);
+      } catch(e) {
+        console.log(e);
       }
+    } else {
+      this.max_desired_viewers = 0;
     }
+
     this.marks = {
       1: 1,
       [this.max_desired_viewers]: this.max_desired_viewers
     };
+  }
+
+  private getMaxDesiredViewers(areas: Array<string>): Observable<number | null> {
+    return this.stationsService.getAreasViewers(areas).pipe(map(r => r.viewers__sum || 0));
   }
 
   private async reloadAreas() {
