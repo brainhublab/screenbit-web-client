@@ -39,7 +39,7 @@ export class VbarChartComponent implements OnInit, OnChanges {
       console.warn('Values per hour must contain <= 24 items');
     } else {
       this.data = this.valuesPerHour.map((v, i) => {
-        return { name: (Math.round(Math.random() * i)).toString().padStart(2, '0'), value: v };
+        return { name: i.toString().padStart(2, '0'), value: (Math.round(Math.random() * v)) };
       });
     }
   }
