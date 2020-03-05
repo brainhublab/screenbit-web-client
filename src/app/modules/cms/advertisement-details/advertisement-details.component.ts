@@ -5,11 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
-  selector: 'app-source-details',
-  templateUrl: './source-details.component.html',
-  styleUrls: ['./source-details.component.less']
+  selector: 'app-advertisement-details',
+  templateUrl: './advertisement-details.component.html',
+  styleUrls: ['./advertisement-details.component.less']
 })
-export class SourceDetailsComponent implements OnInit {
+export class AdvertisementDetailsComponent implements OnInit {
   public ad: Ad = null;
   public loading = true;
   constructor(
@@ -21,7 +21,7 @@ export class SourceDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(pm => {
-      const sId = pm.get('sourceId');
+      const sId = pm.get('advertisementId');
       this.reload(sId);
     });
   }

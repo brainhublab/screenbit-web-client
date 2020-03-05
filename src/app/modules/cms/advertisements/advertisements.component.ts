@@ -4,11 +4,11 @@ import { AdsService } from 'src/app/services/ads.service';
 import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
-  selector: 'app-sources',
-  templateUrl: './sources.component.html',
-  styleUrls: ['./sources.component.less']
+  selector: 'app-advertisements',
+  templateUrl: './advertisements.component.html',
+  styleUrls: ['./advertisements.component.less']
 })
-export class SourcesComponent implements OnInit {
+export class AdvertisementsComponent implements OnInit {
   public data: Array<Ad> = [];
   public loading = true;
   constructor(

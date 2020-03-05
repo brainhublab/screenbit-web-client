@@ -28,16 +28,16 @@ import {
   NzSliderModule,
   NzInputNumberModule
 } from 'ng-zorro-antd';
-import { SourcesComponent } from './sources/sources.component';
+import { AdvertisementsComponent } from './advertisements/advertisements.component';
 import { CreateAdComponent } from './create-ad/create-ad.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TimeRangePickerModule } from '../common/time-range-picker/time-range-picker.module';
-import { SourceDetailsComponent } from './source-details/source-details.component';
+import { AdvertisementDetailsComponent } from './advertisement-details/advertisement-details.component';
 import { SofiaSvgMapModule } from '../common/charts/sofia-svg-map/sofia-svg-map.module';
 
 
 @NgModule({
-  declarations: [CmsEntryComponent, SourcesComponent, CreateAdComponent, SourceDetailsComponent],
+  declarations: [CmsEntryComponent, AdvertisementsComponent, CreateAdComponent, AdvertisementDetailsComponent],
   imports: [
     CommonModule,
     FormsModule,
