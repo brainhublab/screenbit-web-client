@@ -2,6 +2,7 @@
   class="wrapper"
   [class.fullscreen]="zoomed"
   (mousemove)="onMouseMove($event)"
+  (mouseout)="this.tooltipInfo = null"
 >
   <i
     nz-icon
