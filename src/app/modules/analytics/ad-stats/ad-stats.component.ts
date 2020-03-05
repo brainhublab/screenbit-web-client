@@ -32,7 +32,7 @@ export class AdStatsComponent implements OnInit, OnChanges {
   public lineData: Array<LineChartDataRow> = [];
   public mapData: Array<MapStatDataRow> = [];
   public retentionData: Array<RetentionChartDataRow> = [];
-  private readonly emptyCells: Array<[any, any]> = [[0, 3], [1, 1], [1, 5], [2, 4], [4, 3]];
+  private readonly emptyCells: Array<[any, any]> = [[1, 1], [1, 0], [3, 1], [1, 3], [2, 3], [2, 0], [1, 5], [2, 4], [4, 3]];
 
   from: Date;
   to: Date;

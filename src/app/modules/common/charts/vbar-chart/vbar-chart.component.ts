@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { colorSets } from '../color-sets';
 
 
 @Component({
@@ -19,12 +20,16 @@ export class VbarChartComponent implements OnInit, OnChanges {
   showXAxisLabel = true;
   xAxisLabel = 'Hours';
   showYAxisLabel = true;
-  yAxisLabel = 'Interaction';
+  yAxisLabel = 'Reached views';
   barPadding = 24;
   colorScheme = {
     domain: [
       '#707070'
     ]
+  };
+
+  pieColorScheme = {
+    domain: colorSets.find(s => s.name === 'cool')?.domain || ['#707911']
   };
 
   constructor() {
@@ -39,7 +44,7 @@ export class VbarChartComponent implements OnInit, OnChanges {
       console.warn('Values per hour must contain <= 24 items');
     } else {
       this.data = this.valuesPerHour.map((v, i) => {
-        return { name: i.toString().padStart(2, '0'), value: (Math.round(Math.random() * v)) };
+        return { name: i.toString().padStart(2, '0'), value: (Math.round(Math.random() * v * i * 100)) };
       });
     }
   }

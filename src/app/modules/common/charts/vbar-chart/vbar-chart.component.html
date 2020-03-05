@@ -1,14 +1,32 @@
-<ngx-charts-bar-vertical
-  [results]="data"
-  [scheme]="colorScheme"
-  [gradient]="gradient"
-  [xAxis]="showXAxis"
-  [yAxis]="showYAxis"
-  [legend]="showLegend"
-  [showXAxisLabel]="showXAxisLabel"
-  [showYAxisLabel]="showYAxisLabel"
-  [xAxisLabel]="xAxisLabel"
-  [yAxisLabel]="yAxisLabel"
-  [barPadding]="barPadding"
-  (select)="onSelect($event)">
-</ngx-charts-bar-vertical>
+<div class="holder">
+
+  <div class="pie">
+    <ngx-charts-pie-chart
+      [scheme]="pieColorScheme"
+      [results]="data"
+      [gradient]="gradient"
+      [legend]="showLegend"
+      [labels]="true"
+      [doughnut]="true"
+      (select)="onSelect($event)"
+    >
+    </ngx-charts-pie-chart>
+  </div>
+  <div class="vbar">
+    <ngx-charts-bar-vertical
+      [results]="data"
+      [scheme]="colorScheme"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [barPadding]="barPadding"
+      (select)="onSelect($event)"
+    >
+    </ngx-charts-bar-vertical>
+  </div>
+</div>

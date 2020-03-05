@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { colorSets } from './color-sets';
+import { colorSets } from '../color-sets';
 
 const monthName = new Intl.DateTimeFormat("en-us", { month: "short" });
 const weekdayName = new Intl.DateTimeFormat("en-us", { weekday: "short" });
