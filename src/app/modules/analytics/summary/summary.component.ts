@@ -71,19 +71,31 @@ export class SummaryComponent implements OnInit, OnChanges {
 
   private getMapData(): Array<MapStatDataRow> {
     return [...Array(217).keys()].map(a => {
+      const potentialViews = a * 100;
+      const views = Math.round(a * 100 * Math.random());
       return {
         id: a.toString(),
         value: a / 100 * .5,
         tooltip: [
           {
-            name: 'Potential Viewers',
-            value: `${a * 100}`,
+            name: 'Potential Views',
+            value: `${potentialViews}`,
             color: 'blue'
           },
           {
-            name: 'Reached Viewers',
-            value: `${Math.round(a * 100 * Math.random())}`,
+            name: 'Views',
+            value: `${views}`,
+            color: 'yellow'
+          },
+          {
+            name: 'Reached Views',
+            value: `${Math.round(views * .7)}`,
             color: 'green'
+          },
+          {
+            name: 'Slide ins',
+            value: `${Math.round(views * .3)}`,
+            color: 'purple'
           }
         ]
       };

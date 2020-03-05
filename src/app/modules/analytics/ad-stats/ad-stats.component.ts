@@ -94,12 +94,31 @@ export class AdStatsComponent implements OnInit, OnChanges {
 
   private generateMapData() {
     return this.ad.areas.map(a => {
+      const potentialViews = parseInt(a) * 100;
+      const views = Math.round(potentialViews * Math.random());
       return {
-        id: a, value: parseInt(a) / 100 * .5, tooltip: [
+        id: a.toString(),
+        value: parseInt(a) / 100 * .5,
+        tooltip: [
           {
-            name: 'Viewers',
-            value: `${parseInt(a) * 100}`,
-            color: 'red'
+            name: 'Potential Views',
+            value: `${potentialViews}`,
+            color: 'blue'
+          },
+          {
+            name: 'Views',
+            value: `${views}`,
+            color: 'yellow'
+          },
+          {
+            name: 'Reached Views',
+            value: `${Math.round(views * .7)}`,
+            color: 'green'
+          },
+          {
+            name: 'Slide ins',
+            value: `${Math.round(views * .3)}`,
+            color: 'purple'
           }
         ]
       };
