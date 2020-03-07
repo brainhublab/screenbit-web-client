@@ -167,10 +167,9 @@ export class SofiaSvgMapComponent implements ControlValueAccessor, AfterViewInit
     if (!this.svgElement) {
       return;
     }
-    console.log('write v', newAreasIds);
     const titles = this.svgElement.getElementsByTagName('title');
     let isSelected = false;
-    for (let i = 0; i <= titles.length; i++) {
+    for (let i = 0; i < titles.length; i++) {
       isSelected = newAreasIds?.includes(titles[i].getAttribute('id'));
       this.setSelected(isSelected, titles[i]);
     }

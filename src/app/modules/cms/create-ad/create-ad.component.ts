@@ -101,7 +101,7 @@ export class CreateAdComponent implements OnInit {
   }
 
   private getMaxDesiredViewers(areas: Array<string>): Observable<number | null> {
-    return this.stationsService.getAreasViewers(areas).pipe(map(r => r.viewers__sum || 0));
+    return this.stationsService.getAreasViewers(areas).pipe(map(r => r.viewers__sum));
   }
 
   private async reloadAreas() {

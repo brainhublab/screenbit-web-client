@@ -18,50 +18,64 @@
 
   <!-- <nz-card [nzTitle]="ad.title"> -->
   <nz-divider nzText="Info" nzOrientation="left"></nz-divider>
-  <nz-descriptions [nzColumn]="1">
-    <nz-descriptions-item nzTitle="Status">
-      <nz-tag
-        [nzColor]="ad.is_active ? 'green' : null"
-        class="cursor-pointer"
-        nz-tooltip
-        nzTooltipTitle="Click to change"
-        (click)="toggleActiveStatus($event, ad)"
-        >{{ ad.is_active ? "Active" : "Paused" }}</nz-tag
-      >
-    </nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Media type">
-      <nz-tag nzColor="blue">
-        {{ ad.media_type }}
-        <i
-          nz-icon
-          [nzType]="ad.media_type == 'VD' ? 'video-camera' : 'picture'"
-        ></i>
-      </nz-tag>
-    </nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Hours">
-      <app-time-range-picker [ngModel]="ad.hours" [readonly]="true"></app-time-range-picker>
-    </nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Areas">{{
-      ad.areas
-    }}</nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Description">{{
-      ad.description
-    }}</nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Created at">{{
-      ad.created_at | date
-    }}</nz-descriptions-item>
-  </nz-descriptions>
+  <div nz-row class="ad-info-container">
+    <div nz-col nzSpan="10">
+      <nz-descriptions [nzColumn]="1">
+        <nz-descriptions-item nzTitle="Status">
+          <nz-tag
+            [nzColor]="ad.is_active ? 'green' : null"
+            class="cursor-pointer"
+            nz-tooltip
+            nzTooltipTitle="Click to change"
+            (click)="toggleActiveStatus($event, ad)"
+            >{{ ad.is_active ? "Active" : "Paused" }}</nz-tag
+          >
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Media type">
+          <nz-tag nzColor="blue">
+            {{ ad.media_type }}
+            <i
+              nz-icon
+              [nzType]="ad.media_type == 'VD' ? 'video-camera' : 'picture'"
+            ></i>
+          </nz-tag>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Description">{{
+          ad.description
+        }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Created at">{{
+          ad.created_at | date
+        }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Hours">
+          <app-time-range-picker
+            [ngModel]="ad.hours"
+            [readonly]="true"
+          ></app-time-range-picker>
+        </nz-descriptions-item>
+      </nz-descriptions>
+    </div>
+    <div nz-col nzSpan="10">
+      <p class="secondary-label">Areas:</p>
+      <app-sofia-svg-map
+        [ngModel]="ad.areas"
+        [formItem]="true"
+        [disabled]="true"
+      ></app-sofia-svg-map>
+    </div>
+  </div>
   <nz-divider nzText="Media files" nzOrientation="left"></nz-divider>
   <div class="files">
     <div class="file" *ngFor="let file of ad.file">
-      <nz-avatar
-        *ngIf="ad.media_type == 'IM'"
-        [nzShape]="'square'"
-        [nzSize]="256"
-        [nzSrc]="file.file"
-        [nzIcon]="'user'"
-      ></nz-avatar>
-      <video *ngIf="ad.media_type == 'VD'" [src]="file.file" controls></video>
+      <a target="_blank" [href]="file.file">
+        <nz-avatar
+          *ngIf="ad.media_type == 'IM'"
+          [nzShape]="'square'"
+          [nzSize]="256"
+          [nzSrc]="file.file"
+          [nzIcon]="'user'"
+        ></nz-avatar>
+        <video *ngIf="ad.media_type == 'VD'" [src]="file.file" controls></video>
+      </a>
     </div>
   </div>
   <nz-divider nzText="Actions" nzOrientation="left"></nz-divider>

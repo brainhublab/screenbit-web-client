@@ -1,4 +1,4 @@
-<nz-page-header (nzBack)="goBack()" nzBackIcon nzTitle="Upload new">
+<nz-page-header (nzBack)="goBack()" nzBackIcon nzTitle="Upload new ad">
 </nz-page-header>
 <form
   nz-form
@@ -6,91 +6,109 @@
   nzLayout="vertical"
   (ngSubmit)="submitForm()"
 >
-  <nz-form-item>
-    <nz-form-label>
-      Title
-    </nz-form-label>
-    <nz-form-control nzErrorTip="Please input ad title!">
-      <input type="text" nz-input formControlName="title" placeholder="Title" />
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label>
-      Description
-    </nz-form-label>
-    <nz-form-control nzErrorTip="Please input ad description!">
-      <input
-        type="text"
-        nz-input
-        formControlName="description"
-        placeholder="Description"
-      />
-    </nz-form-control>
-  </nz-form-item>
+  <div nz-row nzGutter="30">
+    <div nz-col nzSpan="10" class="left">
+      <nz-form-item>
+        <nz-form-label>
+          Title
+        </nz-form-label>
+        <nz-form-control nzErrorTip="Please input ad title!">
+          <input
+            type="text"
+            nz-input
+            formControlName="title"
+            placeholder="Title"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>
+          Description
+        </nz-form-label>
+        <nz-form-control nzErrorTip="Please input ad description!">
+          <input
+            type="text"
+            nz-input
+            formControlName="description"
+            placeholder="Description"
+          />
+        </nz-form-control>
+      </nz-form-item>
 
-  <nz-form-item>
-    <nz-form-label>
-      Media file
-    </nz-form-label>
-    <nz-form-control
-      nzErrorTip="Please upload a media file!"
-      class="hide-ant-upload-disabled"
-    >
-      <nz-upload
-        nzType="drag"
-        [nzBeforeUpload]="beforeUpload"
-        [nzCustomRequest]="upload"
-        [nzMultiple]="false"
-        [nzLimit]="1"
-        (nzChange)="handleFileChange($event)"
-        [nzListType]="'picture'"
-        [nzDisabled]="validateForm.controls.media_file.value != null"
-      >
-        <p
-          class="ant-upload-drag-icon"
-          *ngIf="validateForm.controls.media_file.value == null"
+      <nz-form-item>
+        <nz-form-label>
+          Media file
+        </nz-form-label>
+        <nz-form-control
+          nzErrorTip="Please upload a media file!"
+          class="hide-ant-upload-disabled"
         >
-          <i nz-icon nzType="inbox"></i>
-        </p>
-        <p
-          *ngIf="validateForm.controls.media_file.value == null"
-          class="ant-upload-text"
-        >
-          Click or drag file to this area to upload
-        </p>
-      </nz-upload>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item *ngIf="selected_media_type === 'IM'">
-    <nz-form-label>
-      Duration
-    </nz-form-label>
-    <nz-form-control nzErrorTip="Please set image duration (in seconds)">
-      <nz-input-number
-      formControlName="duration"
-      [nzMin]="1"
-      [nzMax]="24 * 60 * 60"
-      [nzStep]="10"
-      [nzFormatter]="formatterDuration"
-      [nzParser]="parserDuration"
-    ></nz-input-number>
+          <nz-upload
+            nzType="drag"
+            [nzBeforeUpload]="beforeUpload"
+            [nzCustomRequest]="upload"
+            [nzMultiple]="false"
+            [nzLimit]="1"
+            (nzChange)="handleFileChange($event)"
+            [nzListType]="'picture'"
+            [nzDisabled]="validateForm.controls.media_file.value != null"
+          >
+            <p
+              class="ant-upload-drag-icon"
+              *ngIf="validateForm.controls.media_file.value == null"
+            >
+              <i nz-icon nzType="inbox"></i>
+            </p>
+            <p
+              *ngIf="validateForm.controls.media_file.value == null"
+              class="ant-upload-text"
+            >
+              Click or drag file to this area to upload
+            </p>
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="selected_media_type === 'IM'">
+        <nz-form-label>
+          Duration
+        </nz-form-label>
+        <nz-form-control nzErrorTip="Please set image duration (in seconds)">
+          <nz-input-number
+            formControlName="duration"
+            [nzMin]="1"
+            [nzMax]="24 * 60 * 60"
+            [nzStep]="10"
+            [nzFormatter]="formatterDuration"
+            [nzParser]="parserDuration"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>
+          Hours
+        </nz-form-label>
+        <nz-form-control nzErrorTip="Please input range">
+          <app-time-range-picker
+            formControlName="hours"
+          ></app-time-range-picker>
+        </nz-form-control>
+      </nz-form-item>
 
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label>
-      Hours
-    </nz-form-label>
-    <nz-form-control nzErrorTip="Please input range">
-      <app-time-range-picker formControlName="hours"></app-time-range-picker>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label>
-      Areas
-    </nz-form-label>
-    <nz-form-control nzErrorTip="Please select areas">
-      <!-- <nz-select
+      <nz-form-item>
+        <nz-form-control>
+          <button [nzLoading]="loading" nz-button nzType="primary">
+            Submit
+          </button>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="14" class="right">
+      <nz-form-item>
+        <nz-form-label>
+          Areas
+        </nz-form-label>
+        <nz-form-control nzErrorTip="Please select areas">
+          <!-- <nz-select
         [nzLoading]="!(areasOptions?.length > 0)"
         nzMode="multiple"
         nzPlaceHolder="Select areas"
@@ -102,26 +120,26 @@
           [nzValue]="option[0]"
         ></nz-option>
       </nz-select> -->
-      <app-sofia-svg-map formControlName="areas" [formItem]="true"></app-sofia-svg-map>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item *ngIf="validateForm.controls.areas.valid">
-    <nz-form-label>
-      Potential viewers
-    </nz-form-label>
-    <nz-form-control nzErrorTip="Please set max potantial viewers">
-      <nz-slider
-        [nzMin]="1"
-        [nzMax]="max_desired_viewers"
-        [nzStep]="10"
-        [nzMarks]="marks"
-        formControlName="desired_viewers"
-      ></nz-slider>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-control>
-      <button [nzLoading]="loading" nz-button nzType="primary">Submit</button>
-    </nz-form-control>
-  </nz-form-item>
+          <app-sofia-svg-map
+            formControlName="areas"
+            [formItem]="true"
+          ></app-sofia-svg-map>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="validateForm.controls.areas.valid">
+        <nz-form-label>
+          Potential viewers
+        </nz-form-label>
+        <nz-form-control nzErrorTip="Please set max potantial viewers">
+          <nz-slider
+            [nzMin]="1"
+            [nzMax]="max_desired_viewers"
+            [nzStep]="10"
+            [nzMarks]="marks"
+            formControlName="desired_viewers"
+          ></nz-slider>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
 </form>
