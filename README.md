@@ -1,5 +1,6 @@
 <div align="center">
-  <h1>Screenbit webclient</h1>🎩
+  🖥
+  <h1> Screenbit webclient</h1>
   <p>Webclient for screenbit - a digital signage software that allows you create and control your engaging content on displays near your target area</p>
 </div>
 
